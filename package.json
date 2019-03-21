@@ -1,0 +1,11 @@
+{
+  "name": "purification",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/TMowka/purification.git",
+  "author": "TMowka <deftassassin@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
