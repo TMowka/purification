@@ -1,2 +1,5 @@
 # Node
 node_modules/
+
+# keys
+config/keys/dev.js
