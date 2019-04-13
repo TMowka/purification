@@ -1,21 +1,63 @@
-const Twitter = require('twitter');
-const keys = require('./config/keys');
+const twitter = require('./libs/twitter');
 
-const userId = 'TimMowka';
+const deleteTweets = async () => {
+  /* eslint-disable no-await-in-loop */
+  while (true) {
+    const tweetList = await twitter.getTweetList();
 
-const twitter = new Twitter({
-  consumer_key: keys.twitter.consumerKey,
-  consumer_secret: keys.twitter.consumerSecret,
-  access_token_key: keys.twitter.accessTokenKey,
-  access_token_secret: keys.twitter.accessTokenSecret,
-});
+    if (tweetList.length === 0) {
+      console.log('done.');
 
-twitter.get('statuses/user_timeline', {
-  user_id: userId,
-}, (error, tweets, response) => {
-  if (error) {
-    console.error(error);
+      break;
+    }
+
+    const deleteTweetPromises = [];
+
+    tweetList.forEach((tw) => {
+      deleteTweetPromises.push((async () => {
+        try {
+          await twitter.deleteTweet(tw.id);
+
+          console.log(`Tweet ${tw.id} was deleted`);
+        } catch (error) {
+          console.error(error);
+        }
+      })());
+    });
+
+    await Promise.all(deleteTweetPromises);
   }
+  /* eslint-enable no-await-in-loop */
+};
 
-  console.log(tweets);
-});
+const unlikeTweets = async () => {
+  /* eslint-disable no-await-in-loop */
+  while (true) {
+    const tweetList = await twitter.getLikedList();
+
+    if (tweetList.length === 0) {
+      console.log('done.');
+
+      break;
+    }
+
+    const unlikeTweetPromises = [];
+
+    tweetList.forEach((tw) => {
+      unlikeTweetPromises.push((async () => {
+        try {
+          await twitter.unlikeTweet(tw.id);
+
+          console.log(`Tweet ${tw.id} was unliked`);
+        } catch (error) {
+          console.error(error);
+        }
+      })());
+    });
+
+    await Promise.all(unlikeTweetPromises);
+  }
+  /* eslint-enable no-await-in-loop */
+};
+
+unlikeTweets();
